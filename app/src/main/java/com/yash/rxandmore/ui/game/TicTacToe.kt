@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.layout_tic_tac_toe.*
 class TicTacToe : AppCompatActivity() {
 
     private var turnCounter: Int = 1
+    private var alertCounter: Int = 1
 
     private var player1: String = ""
     private var player2: String = ""
@@ -54,13 +55,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 a1.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 a1.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -71,13 +70,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 a2.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 a2.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -88,13 +85,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 a3.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 a3.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -105,13 +100,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 b1.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 b1.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -122,13 +115,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 b2.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 b2.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -139,13 +130,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 b3.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 b3.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -156,13 +145,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 c1.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 c1.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -173,13 +160,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 c2.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 c2.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -190,13 +175,11 @@ class TicTacToe : AppCompatActivity() {
             if (turnCounter % 2 == 0) {
                 c3.text = getString(R.string.o)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             } else {
                 c3.text = getString(R.string.x)
                 turnCounter++
-                checkIfGameIsFinished()
                 checkWinner()
                 checkTurn()
             }
@@ -205,23 +188,24 @@ class TicTacToe : AppCompatActivity() {
     }
 
     private fun doOnFinish() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(R.string.game_over)
-        builder.setMessage(message)
+        if (alertCounter <= 2) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(R.string.game_over)
+            builder.setMessage(message)
 
-        builder.setPositiveButton(getString(R.string.play_again)) { _, _ ->
-            resetGame()
+            builder.setPositiveButton(getString(R.string.play_again)) { _, _ ->
+                resetGame()
+            }
+
+            builder.setNegativeButton(getString(R.string.quit)) { _, _ ->
+                finishAndRemoveTask()
+            }
+
+            val alertDialog: AlertDialog = builder.create()
+            alertDialog.setCancelable(false)
+            alertDialog.setCanceledOnTouchOutside(false)
+            alertDialog.show()
         }
-
-        builder.setNegativeButton(getString(R.string.quit)) { _, _ ->
-            finish()
-        }
-
-        val alertDialog: AlertDialog = builder.create()
-        alertDialog.setCancelable(false)
-        alertDialog.setCanceledOnTouchOutside(false)
-        alertDialog.show()
-
     }
 
     @SuppressLint("InflateParams")
@@ -236,6 +220,11 @@ class TicTacToe : AppCompatActivity() {
         val p2 = dialogView.findViewById(R.id.etPlayer2) as EditText
         val startGame = dialogView.findViewById(R.id.tvStartGame) as TextView
         val quitGame = dialogView.findViewById(R.id.tvQuitGame) as TextView
+
+        if (player1.isNotEmpty() && player2.isNotEmpty()) {
+            p1.setText(player1)
+            p2.setText(player2)
+        }
 
         startGame.setOnClickListener {
 
@@ -276,8 +265,7 @@ class TicTacToe : AppCompatActivity() {
         c3.text = ""
 
         turnCounter = 1
-        player1 = ""
-        player2 = ""
+        alertCounter = 1
         message = ""
 
         initGameLogic()
@@ -329,8 +317,11 @@ class TicTacToe : AppCompatActivity() {
                             b2 == getString(R.string.x) &&
                             c1 == getString(R.string.x))
         ) {
-            message = "$player1 won the game!"
-            doOnFinish()
+            if (alertCounter <= 1) {
+                message = "$player1 won the game!"
+                alertCounter++
+                doOnFinish()
+            }
         } else if (
             (
                     a1 == getString(R.string.o) &&
@@ -365,10 +356,14 @@ class TicTacToe : AppCompatActivity() {
                             b2 == getString(R.string.o) &&
                             c1 == getString(R.string.o))
         ) {
-            message = "$player2 won the game!"
-            doOnFinish()
+            if (alertCounter <= 1) {
+                message = "$player2 won the game!"
+                alertCounter++
+                doOnFinish()
+            }
         } else {
             message = getString(R.string.tie)
+            checkIfGameIsFinished()
         }
     }
 
@@ -379,8 +374,10 @@ class TicTacToe : AppCompatActivity() {
             !b2.text.isNullOrEmpty() && !b3.text.isNullOrEmpty() &&
             !c1.text.isNullOrEmpty() && !c2.text.isNullOrEmpty() && !c3.text.isNullOrEmpty()
         ) {
-            checkWinner()
-            doOnFinish()
+            if (alertCounter <= 1) {
+                checkWinner()
+                doOnFinish()
+            }
         }
     }
 
