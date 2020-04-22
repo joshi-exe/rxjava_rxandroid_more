@@ -375,7 +375,6 @@ class TicTacToe : AppCompatActivity() {
             !c1.text.isNullOrEmpty() && !c2.text.isNullOrEmpty() && !c3.text.isNullOrEmpty()
         ) {
             if (alertCounter <= 1) {
-                checkWinner()
                 doOnFinish()
             }
         }
